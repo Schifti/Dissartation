@@ -1,10 +1,34 @@
-import aes
+from PIL import Image
+import binascii
 
-key = 'Test'
+im = Image.open('pfp.png')
+pix = im.load()
+print(im.size)
+width, height = im.size
+print(width, 'x')
+print(height, 'y')
+print(pix[0, 0])
+r, g, b, o = pix[0, 0]
+print('R:', r, 'G:', g, 'B:', b, 'O:', o)
+for x in range(0, width):
+    for y in range(0, height):
+        pix[x, y] = 255, 0, 255, 255
+print(pix[0, 0])
+im.save('test.png')
+
+
+def to_hex(msg):
+    hexed = ''
+    for char in msg:
+        hexed = hexed + str(format(ord(char), 'x'))
+    return hexed
+
+
+def from_hex(asciiHex):
+    return bytes.fromhex(asciiHex).decode('utf-8')
 
 
 def encode(image, msg):
-
     encoded = ''
     return encoded
 
@@ -15,21 +39,5 @@ def decode(encoded):
 
 
 # Test
-print(encode('image', 'Hello World'))
-
-# example of using mode of operation
-mk = 0x000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
-mk_arr = aes.utils.int2arr8bit(mk, 32)
-pt = 0x00112233445566778899aabbccddeeff
-pt_arr = aes.utils.int2arr8bit(pt, 16)
-
-
-cipher = aes.aes(mk, 256, mode='CTR', padding='PKCS#7')
-
-# notice: enc/dec can only 'list'  !!
-ct_arr = cipher.enc(pt_arr)
-print("0x"+hex(aes.utils.arr8bit2int(ct_arr))[2:].zfill(32))
-
-pr_arr = cipher.dec(ct_arr)
-print("0x"+hex(aes.utils.arr8bit2int(pr_arr))[2:].zfill(32))
-
+print(to_hex('hello world'))
+print(from_hex('68656c6c6f20776f726c64'))
