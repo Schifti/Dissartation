@@ -24,20 +24,17 @@ def to_hex(msg):
     return hexed
 
 
-def from_hex(asciiHex):
-    return bytes.fromhex(asciiHex).decode('utf-8')
+def from_hex(hexmsg):
+    return bytes.fromhex(hexmsg).decode('utf-8')
 
 
 def encode(image, msg):
-    encoded = ''
+    im = Image.open(image)
+    hexed = to_hex(msg)
+
     return encoded
 
 
 def decode(encoded):
     msg = ""
     return msg
-
-
-# Test
-print(to_hex('hello world'))
-print(from_hex('68656c6c6f20776f726c64'))
