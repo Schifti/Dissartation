@@ -1,16 +1,15 @@
 from PIL import Image
+import random
 
 
-def encode(image, msg):
+def encode(image, msg, seed):
     im = Image.open(image)
     pix = im.load()
     width, height = im.size
-    x, y = 0, 0
     c = 0
+    random.seed(seed)
     for char in msg:
-        if x >= height:
-            y = y + 1
-            x = 0
+        x, y = random.randint(0, width - 1), random.randint(0, height - 1)
         r, g, b, o = pix[x, y]
         if c == 0:
             pix[x, y] = ord(char), g, b, 254
@@ -21,33 +20,37 @@ def encode(image, msg):
         else:
             pix[x, y] = r, g, ord(char), 254
             c = 0
-        x = x + 1
+    x, y = random.randint(0, width - 1), random.randint(0, height - 1)
+    pix[x, y] = 0, 255, 174, 254
     im.save('test.png')
     return
 
 
-def decode(image):
+def decode(image, seed):
     im = Image.open(image)
     pix = im.load()
     width, height = im.size
     c = 0
     msg = ''
-    for x in range(0, width):
-        for y in range(0, height):
-            r, g, b, o = pix[x, y]
-            if o == 254:
-                if c == 0:
-                    msg = msg + chr(r)
-                    c = c + 1
-                elif c == 1:
-                    msg = msg + chr(g)
-                    c = c + 1
-                else:
-                    msg = msg + chr(b)
-                    c = 0
-    return msg
+    random.seed(seed)
+    end = False
+    while not end:
+        x, y = random.randint(0, width - 1), random.randint(0, height - 1)
+        r, g, b, o = pix[x, y]
+        if o == 254:
+            if pix[x, y] == (0, 255, 174, 254):
+                return msg
+            if c == 0:
+                msg = msg + chr(r)
+                c = c + 1
+            elif c == 1:
+                msg = msg + chr(g)
+                c = c + 1
+            else:
+                msg = msg + chr(b)
+                c = 0
 
 
-encode('pfp.png', 'Martin Schifter')
+encode('pfp.png', "Hello World I hate everyone!", 573909672895873)
 
-print('Message:', decode('test.png'))
+print('Message:', decode('test.png', 573909672895873))
