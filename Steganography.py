@@ -12,16 +12,15 @@ def encode(image, msg, seed):
         x, y = random.randint(0, width - 1), random.randint(0, height - 1)
         r, g, b, o = pix[x, y]
         if c == 0:
-            pix[x, y] = ord(char), g, b, 254
+            pix[x, y] = ord(char), g, b, o
             c = c + 1
         elif c == 1:
-            pix[x, y] = r, ord(char), b, 254
+            pix[x, y] = r, ord(char), b, o
             c = c + 1
         else:
-            pix[x, y] = r, g, ord(char), 254
+            pix[x, y] = r, g, ord(char), o
             c = 0
-    x, y = random.randint(0, width - 1), random.randint(0, height - 1)
-    pix[x, y] = 0, 255, 174, 254
+    pix[random.randint(0, width - 1), random.randint(0, height - 1)] = 0, 255, 174, 255
     im.save('test.png')
     return
 
@@ -37,30 +36,29 @@ def decode(image, seed):
     while not end:
         x, y = random.randint(0, width - 1), random.randint(0, height - 1)
         r, g, b, o = pix[x, y]
-        if o == 254:
-            if pix[x, y] == (0, 255, 174, 254):
-                return msg
-            if c == 0:
-                msg = msg + chr(r)
-                c = c + 1
-            elif c == 1:
-                msg = msg + chr(g)
-                c = c + 1
-            else:
-                msg = msg + chr(b)
-                c = 0
+        if pix[x, y] == (0, 255, 174, 255):
+            return msg
+        if c == 0:
+            msg = msg + chr(r)
+            c = c + 1
+        elif c == 1:
+            msg = msg + chr(g)
+            c = c + 1
+        else:
+            msg = msg + chr(b)
+            c = 0
 
 
 def main():
     end = False
     while not end:
-        choice = input('Would you like to: \n(E)ncode \n(D)ecode \n(Q)uit \n')
-        if choice == 'E':
+        choice = input('Would you like to: \n(e)ncode \n(d)ecode \n(q)uit \n')
+        if choice == 'e':
             encode('pfp.png', "Hello World I hate everyone!", 573909672895873)
             print('Message Encoded')
-        elif choice == 'D':
+        elif choice == 'd':
             print('Message:', decode('test.png', 573909672895873))
-        elif choice == 'Q':
+        elif choice == 'q':
             end = True
         else:
             print('Error please try again')
