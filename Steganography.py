@@ -51,6 +51,20 @@ def decode(image, seed):
                 c = 0
 
 
-encode('pfp.png', "Hello World I hate everyone!", 573909672895873)
+def main():
+    end = False
+    while not end:
+        choice = input('Would you like to: \n(E)ncode \n(D)ecode \n(Q)uit \n')
+        if choice == 'E':
+            encode('pfp.png', "Hello World I hate everyone!", 573909672895873)
+            print('Message Encoded')
+        elif choice == 'D':
+            print('Message:', decode('test.png', 573909672895873))
+        elif choice == 'Q':
+            end = True
+        else:
+            print('Error please try again')
+    return
 
-print('Message:', decode('test.png', 573909672895873))
+
+main()
