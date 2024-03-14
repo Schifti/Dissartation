@@ -50,19 +50,19 @@ def decode(image, seed):
             return msg
         kr, kg, kb, ko = pix[x + 1, y]
         if c == 0:
-            if r - kr < -1:
+            if r - kr < 0:
                 msg = msg + chr(r - kr + 256)
             else:
                 msg = msg + chr(r - kr)
             c = c + 1
         elif c == 1:
-            if g - kg < -1:
+            if g - kg < 0:
                 msg = msg + chr(g - kg + 256)
             else:
                 msg = msg + chr(g - kg)
             c = c + 1
         else:
-            if b - kb < -1:
+            if b - kb < 0:
                 msg = msg + chr(b - kb + 256)
             else:
                 msg = msg + chr(b - kb)
