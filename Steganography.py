@@ -7,42 +7,41 @@ def encode(image, msg, seed):
     pix = im.load()
     width, height = im.size
     c = 0
+    coords = []
     random.seed(seed)
     for char in msg:
-
-        print(char)
         x, y = random.randint(0, width - 2), random.randint(0, height - 2)
         r, g, b, o = pix[x, y]
-        print(pix[x, y], pix[x+1, y])
-        if pix[x, y] == pix[x + 1, y]:  # issue is here!
-            print(c, char)
-            if c == 0:
-                if r + ord(char) > 255:
-                    pix[x, y] = r + ord(char) - 256, g, b, o
-                else:
-                    pix[x, y] = r + ord(char), g, b, o
-                c = c + 1
-                pog = r + ord(char)
-            elif c == 1:
-                if g + ord(char) > 255:
-                    pix[x, y] = r, g + ord(char) - 256, b, o
-                else:
-                    pix[x, y] = r, g + ord(char), b, o
-                c = c + 1
-                pog = g + ord(char)
-            elif c == 2:
-                if b + ord(char) > 255:
-                    pix[x, y] = r, g, b + ord(char) - 256, o
-                else:
-                    pix[x, y] = r, g, b + ord(char), o
-                pog = b + ord(char)
-                c = 0
+        while pix[x, y] != pix[x + 1, y]:
+            pix[x, y] = r, g, b, 254
+            x, y = random.randint(0, width - 2), random.randint(0, height - 2)
+        for loc in coords:
+            if (x, y) == loc or (x+1, y) == loc:
+                print('dupe', x, y)
+        coords.append((x, y))
+        if c == 0:
+            if r + ord(char) > 255:
+                pix[x, y] = r + ord(char) - 256, g, b, o
             else:
-                print('WTF')
+                pix[x, y] = r + ord(char), g, b, o
+            c = c + 1
+        elif c == 1:
+            if g + ord(char) > 255:
+                pix[x, y] = r, g + ord(char) - 256, b, o
+            else:
+                pix[x, y] = r, g + ord(char), b, o
+            c = c + 1
+        elif c == 2:
+            if b + ord(char) > 255:
+                pix[x, y] = r, g, b + ord(char) - 256, o
+            else:
+                pix[x, y] = r, g, b + ord(char), o
+            c = 0
         else:
-            print('no dupe')
+            print('WTF')
     pix[random.randint(0, width - 2), random.randint(0, height - 2)] = 0, 255, 174, 255
     im.save('test.png')
+    print(coords)
     return
 
 
@@ -60,7 +59,9 @@ def decode(image, seed):
         if pix[x, y] == (0, 255, 174, 255):
             return msg
         kr, kg, kb, ko = pix[x + 1, y]
-        if c == 0:
+        if o == 254:
+            print('skip')
+        elif c == 0:
             if r - kr < 0:
                 msg = msg + chr(r - kr + 256)
             else:
@@ -96,10 +97,11 @@ def main():
     return
 
 
-encode('pfp.png', "What the fuck did you just", 5739096728958737)
+key = 12345678904
+encode('pfp.png', "What the fuck did you just", key)
 print('msg encoded')
 che = "What the fuck did you just"
-ans = decode('test.png', 5739096728958737)
+ans = decode('test.png', key)
 if che == ans:
     print('Match')
 else:
