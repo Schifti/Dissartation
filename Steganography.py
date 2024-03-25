@@ -16,9 +16,11 @@ def encode(image, msg, seed):
             pix[x, y] = r, g, b, 254
             x, y = random.randint(0, width - 2), random.randint(0, height - 2)
         for loc in coords:
-            if (x, y) == loc or (x+1, y) == loc:
+            if (x, y) == loc or (x + 1, y) == loc:
                 skip = True
         coords.append((x, y))
+        coords.append((x + 1, y))
+        r, g, b, o = pix[x, y]
         if c == 0:
             if r + ord(char) > 255:
                 pix[x, y] = r + ord(char) - 256, g, b, o
@@ -37,8 +39,6 @@ def encode(image, msg, seed):
             else:
                 pix[x, y] = r, g, b + ord(char), o
             c = 0
-        else:
-            print('WTF')
     pix[random.randint(0, width - 2), random.randint(0, height - 2)] = 0, 255, 174, 255
     im.save('test.png')
     return
@@ -59,7 +59,7 @@ def decode(image, seed):
             return msg
         kr, kg, kb, ko = pix[x + 1, y]
         if o == 254:
-            o =255
+            o = 255
         elif c == 0:
             if r - kr < 0:
                 msg = msg + chr(r - kr + 256)
@@ -97,9 +97,11 @@ def main():
 
 
 key = 1234567890
-msg = "The US has filed a landmark lawsuit against Apple which accuses the tech giant of monopolising the smartphone market and crushing competition. In the lawsuit, the justice department alleges the company used its control of the iPhone to illegally limit competitors and consumer options."
+msg = ("The US has filed a landmark lawsuit against Apple which accuses the tech giant of monopolising the smartphone "
+       "market and crushing competition. In the lawsuit, the justice department alleges the company used its control "
+       "of the iPhone to illegally limit competitors and consumer options.")
+
 encode('pfp.png', msg, key)
-print('msg encoded')
 ans = decode('test.png', key)
 count = 0
 yes = 0
@@ -113,5 +115,5 @@ for char in ans:
 if msg == ans:
     print('Match')
 else:
-    print('No match', (yes/len(msg))*100, '% correct', no)
+    print('No match', (yes / len(msg)) * 100, '% Correct', no, 'Incorrect')
     print(ans)
