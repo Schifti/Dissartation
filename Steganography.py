@@ -113,7 +113,7 @@ for char in ans:
         no = no + 1
     count = count + 1
 if msg == ans:
-    print('Match')
+    print(ans)
 else:
     print('No match', (yes / len(msg)) * 100, '% Correct', no, 'Incorrect')
     print(ans)
