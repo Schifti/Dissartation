@@ -1,18 +1,33 @@
-import os
+import tqdm
 import socket
 
-HOST = '192.168.1.205'
+HOST = '10.59.8.145'
 PORT = 420
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((HOST, PORT))
 server.listen(5)
 
-while True:
-    connection, address = server.accept()
-    print(f'connected to {address}')
-    msg = connection.recv(1024).decode('utf-8')
-    print(f'msg is {msg}')
-    connection.send(f'msg received'.encode('utf-8'))
-    connection.close()
-    print(f'connected closed to {address}')
+
+connection, address = server.accept()
+print(f'connected to {address}')
+file_name = connection.recv(1024).decode('utf-8')
+print(file_name)
+file_size = connection.recv(1024).decode('utf-8')
+print(file_size)
+file = open(file_name, 'wb')
+file_bytes = b''
+done = False
+progress = tqdm.tqdm(unit='B', unit_scale=True, unit_divisor=1000, total=int(file_size))
+while not done:
+    data = connection.recv(1024)
+    if file_bytes[-5:] == b'<END>':
+        done = True
+    else:
+        file_bytes += data
+    progress.update(1024)
+file.write(file_bytes)
+file.close()
+connection.close()
+print(f'connected closed to {address}')
+server.close()
