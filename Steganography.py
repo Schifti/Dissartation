@@ -97,23 +97,10 @@ def main():
 
 
 key = 1234567890
-msg = ("The US has filed a landmark lawsuit against Apple which accuses the tech giant of monopolising the smartphone "
-       "market and crushing competition. In the lawsuit, the justice department alleges the company used its control "
-       "of the iPhone to illegally limit competitors and consumer options.")
+message = (
+    "The US has filed a landmark lawsuit against Apple which accuses the tech giant of monopolising the smartphone "
+    "market and crushing competition. In the lawsuit, the justice department alleges the company used its control "
+    "of the iPhone to illegally limit competitors and consumer options.")
 
-encode('pfp.png', msg, key)
-ans = decode('test.png', key)
-count = 0
-yes = 0
-no = 0
-for char in ans:
-    if char == msg[count]:
-        yes = yes + 1
-    else:
-        no = no + 1
-    count = count + 1
-if msg == ans:
-    print(ans)
-else:
-    print('No match', (yes / len(msg)) * 100, '% Correct', no, 'Incorrect')
-    print(ans)
+encode('pfp.png', message, key)
+decode('test.png', key)
