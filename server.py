@@ -1,13 +1,9 @@
 import tqdm
 import socket
 
-HOST = '10.59.8.145'
-PORT = 420
-
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((HOST, PORT))
+server.bind((socket.gethostname(), 420))
 server.listen(5)
-
 
 connection, address = server.accept()
 print(f'connected to {address}')
