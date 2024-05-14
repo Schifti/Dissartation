@@ -119,20 +119,3 @@ def main():
         else:
             print('Error please try again')
     return
-
-
-key = 7215325692245
-message = (
-    "The US has filed a landmark lawsuit against Apple which accuses the tech giant of monopolising the smartphone "
-    "market and crushing competition. In the lawsuit, the justice department alleges the company used its control "
-    "of the iPhone to illegally limit competitors and consumer options.")
-
-nonce, tag = encode('pfp.png', message, key)
-hello = decode('test.png', key, nonce, tag)
-
-if hello != message:
-    print('FAIL')
-    print(hello)
-else:
-    print('PASS')
-    print(hello)
