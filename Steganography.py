@@ -31,7 +31,6 @@ def encode(image, msg, seed):
     random.seed(seed)
     nonce, ciphertext, tag = encrypt(msg)
     hexmsg = ciphertext.hex()
-    print(hexmsg)
     for char in hexmsg:
         x, y = random.randint(0, width - 2), random.randint(0, height - 2)
         r, g, b, o = pix[x, y]
@@ -47,21 +46,21 @@ def encode(image, msg, seed):
         char = int(char, 16)
         if c == 0:
             if r + char > 255:
-                pix[x, y] = r + char - 256, g, b, 255
+                pix[x, y] = r + char - 256, g, b, o
             else:
-                pix[x, y] = r + char, g, b, 255
+                pix[x, y] = r + char, g, b, o
             c = c + 1
         elif c == 1:
             if g + char > 255:
-                pix[x, y] = r, g + char - 256, b, 255
+                pix[x, y] = r, g + char - 256, b, 0
             else:
-                pix[x, y] = r, g + char, b, 255
+                pix[x, y] = r, g + char, b, 0
             c = c + 1
         elif c == 2:
             if b + int(char) > 255:
-                pix[x, y] = r, g, b + char - 256, 255
+                pix[x, y] = r, g, b + char - 256, 0
             else:
-                pix[x, y] = r, g, b + char, 255
+                pix[x, y] = r, g, b + char, 0
             c = 0
     pix[random.randint(0, width - 2), random.randint(0, height - 2)] = 0, 255, 174, 255
     im.save('test.png')
@@ -74,14 +73,12 @@ def decode(image, seed, nonce, tag):
     width, height = im.size
     c = 0
     msg = ''
-    num = 0
     random.seed(seed)
     end = False
     while not end:
         x, y = random.randint(0, width - 2), random.randint(0, height - 2)
         r, g, b, o = pix[x, y]
         if pix[x, y] == (0, 255, 174, 255):
-            print(msg)
             unhex = bytes.fromhex(msg)
             return decrypt(nonce, unhex, tag)
         kr, kg, kb, ko = pix[x + 1, y]
