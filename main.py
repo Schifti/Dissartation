@@ -34,7 +34,10 @@ def communication():
         if choice.lower() == 's':
             image = input('Input image name\n')
             ip = input('Input IP address\n')
-            send_image(image, ip)
+            nonce = input('Input nonce\n')
+            tag = input('Input tag\n')
+            receiver = input('Input recipients username\n')
+            send_image(image, ip, nonce, tag, receiver)
         elif choice.lower() == 'r':
             receive_image()
         elif choice.lower() == 'b':
