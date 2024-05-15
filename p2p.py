@@ -11,9 +11,10 @@ def receive_image():
     connection, address = server.accept()
     print(f'connected to {address}')
     file_name = connection.recv(1024).decode('utf-8')
-    print(file_name)
     file_size = connection.recv(1024).decode('utf-8')
-    print(file_size)
+    file_nonce = connection.recv(1024).decode('utf-8')
+    file_tag = connection.recv(1024).decode('utf-8 ')
+    receiver = connection.recv(1024).decode('utf-8')
     file = open(file_name, 'wb')
     file_bytes = b''
     done = False
@@ -32,13 +33,16 @@ def receive_image():
     server.close()
 
 
-def send_image(image, ip):
+def send_image(image, ip, nonce, tag, receiver):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect((ip, 420))
-    file = open('test.png', 'rb')
+    file = open(image, 'rb')
     file_size = os.path.getsize('test.png')
-    client.send('image.png'.encode('utf-8'))
+    client.send(image.encode('utf-8'))
     client.send(str(file_size).encode('utf-8'))
+    client.send(nonce.encode('utf-8'))
+    client.send(tag.encode('utf-8'))
+    client.send(receiver.endcode('utf-8'))
     data = file.read()
     client.sendall(data)
     client.send(b'<END>')
