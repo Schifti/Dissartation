@@ -13,7 +13,7 @@ def steganography():
             key = input('Input key\n')
             nonce, tag = encode(image, message, key)
             print('Message Encoded')
-            print('Nonce:', nonce, 'tag', tag)
+            print('Nonce:', nonce, 'Tag;', tag)
         elif choice.lower() == 'd':
             image = input('Input image name\n')
             nonce = input('Input nonce\n')
@@ -39,7 +39,20 @@ def communication():
             receiver = input('Input recipients username\n')
             send_image(image, ip, nonce, tag, receiver)
         elif choice.lower() == 'r':
-            receive_image()
+            nonce, tag, receiver, image = receive_image()
+            if receiver == 'test':
+                fin = False
+                while not fin:
+                    selection = input('This message is for you would you like to decode? Y/N\n')
+                    if selection.lower() == 'y':
+                        key = input('Input key\n')
+                        print('Message:', decode(image, nonce, tag, key))
+                        fin = True
+                    elif selection.lower() == 'n':
+                        print(nonce, tag, image)
+                        fin = True
+                    else:
+                        print('Error please try again')
         elif choice.lower() == 'b':
             return
         else:

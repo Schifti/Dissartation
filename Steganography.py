@@ -62,7 +62,7 @@ def encode(image, msg, key):
                 pix[x, y] = r, g, b + char, 0
             c = 0
     pix[random.randint(0, width - 2), random.randint(0, height - 2)] = 0, 255, 174, 255
-    im.save('test.png')
+    im.save('encoded.png')
     return nonce, tag
 
 
