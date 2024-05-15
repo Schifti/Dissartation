@@ -22,14 +22,14 @@ def to_hex(char):
     return hexed
 
 
-def encode(image, msg, seed):
+def encode(image, msg, key):
     im = Image.open(image)
     pix = im.load()
     width, height = im.size
     c = 0
     coords = []
-    random.seed(seed)
-    nonce, ciphertext, tag = encrypt(msg)
+    random.seed(key)
+    nonce, ciphertext, tag = encrypt(msg, key)
     hexmsg = ciphertext.hex()
     for char in hexmsg:
         x, y = random.randint(0, width - 2), random.randint(0, height - 2)
@@ -67,20 +67,20 @@ def encode(image, msg, seed):
     return nonce, tag
 
 
-def decode(image, seed, nonce, tag):
+def decode(image, nonce, tag, key):
     im = Image.open(image)
     pix = im.load()
     width, height = im.size
     c = 0
     msg = ''
-    random.seed(seed)
+    random.seed(key)
     end = False
     while not end:
         x, y = random.randint(0, width - 2), random.randint(0, height - 2)
         r, g, b, o = pix[x, y]
         if pix[x, y] == (0, 255, 174, 255):
             unhex = bytes.fromhex(msg)
-            return decrypt(nonce, unhex, tag)
+            return decrypt(nonce, unhex, tag, key)
         kr, kg, kb, ko = pix[x + 1, y]
         if o == 254:
             o = 255
@@ -102,20 +102,4 @@ def decode(image, seed, nonce, tag):
             else:
                 msg = msg + to_hex(b - kb)
             c = 0
-    return
-
-
-def main():
-    end = False
-    while not end:
-        choice = input('Would you like to: \n(e)ncode \n(d)ecode \n(q)uit \n')
-        if choice == 'e':
-            encode('pfp.png', "Hello World", 573909672895873)
-            print('Message Encoded')
-        elif choice == 'd':
-            print('Message:', decode('test.png', 573909672895873))
-        elif choice == 'q':
-            end = True
-        else:
-            print('Error please try again')
     return
