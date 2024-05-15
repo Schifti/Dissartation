@@ -3,7 +3,7 @@ import secrets
 
 
 def key_gen():
-    key = secrets.token_hex(32)
+    key = secrets.token_hex(256)
     return key
 
 
