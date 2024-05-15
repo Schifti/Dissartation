@@ -30,8 +30,7 @@ def encode(image, msg, key):
     coords = []
     random.seed(key)
     nonce, ciphertext, tag = encrypt(msg, key)
-    hexmsg = ciphertext.hex()
-    for char in hexmsg:
+    for char in ciphertext:
         x, y = random.randint(0, width - 2), random.randint(0, height - 2)
         r, g, b, o = pix[x, y]
         while pix[x, y] != pix[x + 1, y]:
