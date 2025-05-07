@@ -1,3 +1,6 @@
 PyCryptodome
 pillow
 tqdm
+socket
+os
+secrets

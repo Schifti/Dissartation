@@ -27,7 +27,7 @@ def steganography():
     return
 
 
-def communication():
+def communication(username):
     end = False
     while not end:
         choice = input('Would you like to: \n(S)end \n(R)eceive \n(B)ack \n')
@@ -40,7 +40,7 @@ def communication():
             send_image(image, ip, nonce, tag, receiver)
         elif choice.lower() == 'r':
             nonce, tag, receiver, image = receive_image()
-            if receiver == 'test':
+            if receiver == username:
                 fin = False
                 while not fin:
                     selection = input('This message is for you would you like to decode? Y/N\n')
@@ -61,6 +61,7 @@ def communication():
 
 
 def main():
+    username = input('Welcome to my project please input username\n')
     end = False
     while not end:
         choice = input('Would you like to: \n1). Encode or Decode messages \n2). Send or Receive messages \n3). '
@@ -68,7 +69,7 @@ def main():
         if choice == '1':
             steganography()
         elif choice == '2':
-            communication()
+            communication(username)
         elif choice == '3':
             print('key:', key_gen())
         elif choice == '4':

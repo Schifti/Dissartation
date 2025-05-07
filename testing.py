@@ -1,6 +1,8 @@
 import time
 from Steganography import encode, decode
 from PIL import Image
+import os.path
+import socket
 
 
 def test_encode_speed():
@@ -85,3 +87,42 @@ def speed_test():
         average = average + temp
     averageMean = average / 100
     print(averageMean)
+
+
+def white():
+    im = Image.open('pfp.png')
+    pix = im.load()
+    width, height = im.size
+    for x in range(0, width):
+        for y in range(0, height):
+            pix[x, y] = 0, 0, 0, 255
+    im.save('white.png')
+
+
+def encode_decode():
+    me = ('Evidence of applying appropriate methods and tools correctly in a justified and well- defined, producing '
+          'innovative solutions with evidence of understanding strengths and limitations. Ethical aspects appropriately '
+          'reported.')
+    n, t = encode('testy.JPG', me, '2a2b4e3337d863c8903447a55673fa00cbb3b27f25fa7fb824975ea2fd875fd1')
+    m = decode('encoded.png', n, t, '2a2b4e3337d863c8903447a55673fa00cbb3b27f25fa7fb824975ea2fd875fd1')
+    if m == me:
+        print('YEY')
+
+
+def send_image(image, ip, nonce, tag, receiver):
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect((ip, 420))
+    file = open(image, 'rb')
+    file_size = os.path.getsize(image)
+    client.send('sent.png'.encode('utf-8'))
+    client.send(str(file_size).encode('utf-8'))
+    client.send(nonce.encode('utf-8'))
+    client.send(tag.encode('utf-8'))
+    client.send(receiver.encode('utf-8'))
+    data = file.read()
+    client.sendall(data)
+    client.send(b'<END>')
+    file.close()
+    client.close()
+
+send_image('encoded.png', '192.168.1.205', 'bda5d70766fdccf65b61a0cb59b611ae', 'c390d4c1e0aea8cbbc4e8d01537ce944', 'martin')

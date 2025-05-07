@@ -19,7 +19,6 @@ def receive_image():
     file_bytes = b''
     done = False
     progress = tqdm.tqdm(unit='B', unit_scale=True, unit_divisor=1000, total=int(file_size))
-    print(file_name, file_size, file_nonce, file_tag, receiver)
     while not done:
         data = connection.recv(1024)
         if file_bytes[-5:] == b'<END>':
